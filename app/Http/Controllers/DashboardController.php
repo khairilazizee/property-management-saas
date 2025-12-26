@@ -19,12 +19,12 @@ class DashboardController extends Controller
             return Inertia::render('superadmin/dashboard');
         }
 
-        if ($user?->is_superadmin && $member) {
-            if ($member->role === AgencyMemberRole::Agent) {
+        if (!$user?->is_superadmin && $member) {
+            if ($member->role === AgencyMemberRole::Agent->value) {
                 return Inertia::render('agent/dashboard');
             }
 
-            if ($member->role === AgencyMemberRole::Admin) {
+            if ($member->role === AgencyMemberRole::Admin->value) {
                 return Inertia::render('admin/dashboard');
             }
         }

@@ -7,6 +7,7 @@ import {
     CardFooter,
     CardHeader,
 } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -31,6 +32,7 @@ type agencyModel = {
     id: number;
     name: string;
     slug: string;
+    is_active: boolean;
     admin_member: {
         id: number;
         name: string;
@@ -53,6 +55,7 @@ export default function Dashboard({ agency }: Props) {
         admin_email: agency.admin_member.user.email,
         admin_password: '',
         admin_password_confirmation: '',
+        is_active: agency.is_active,
     });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,6 +105,24 @@ export default function Dashboard({ agency }: Props) {
                                     placeholder="Slug"
                                     value={agency.slug}
                                 />
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="is_active"
+                                    checked={data.is_active}
+                                    onCheckedChange={(checked) =>
+                                        setData('is_active', Boolean(checked))
+                                    }
+                                />
+                                <Label
+                                    htmlFor="is_active"
+                                    className="cursor-pointer"
+                                >
+                                    Active
+                                </Label>
+                                {errors.is_active && (
+                                    <InputError message={errors.is_active} />
+                                )}
                             </div>
                             <CardDescription>
                                 Another information be added later

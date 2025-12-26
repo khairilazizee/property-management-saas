@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -40,6 +41,7 @@ type agencyModel = {
     id: number;
     name: string;
     slug: string;
+    is_active: boolean;
 };
 
 type Props = {
@@ -76,6 +78,7 @@ export default function Dashboard({ agencies }: Props) {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Slug</TableHead>
+                                    <TableHead>Status</TableHead>
                                     <TableHead className="w-[50px]">
                                         Edit
                                     </TableHead>
@@ -90,10 +93,22 @@ export default function Dashboard({ agencies }: Props) {
                                         id: number;
                                         name: string;
                                         slug: string;
+                                        is_active: boolean;
                                     }) => (
                                         <TableRow key={agency.id}>
                                             <TableCell>{agency.name}</TableCell>
                                             <TableCell>{agency.slug}</TableCell>
+                                            <TableCell>
+                                                {agency.is_active ? (
+                                                    <Badge variant="default">
+                                                        Active
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge variant="destructive">
+                                                        Inactive
+                                                    </Badge>
+                                                )}
+                                            </TableCell>
                                             <TableCell>
                                                 <Link
                                                     href={edit.url({

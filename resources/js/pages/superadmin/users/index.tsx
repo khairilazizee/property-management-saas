@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -11,7 +12,6 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { CheckCircle, XCircle } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,11 +73,10 @@ export default function Dashboard({ users }: Props) {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
+                                    <TableHead>Agency Name</TableHead>
+                                    <TableHead>Role</TableHead>
                                     <TableHead className="w-[50px]">
-                                        Agency Name
-                                    </TableHead>
-                                    <TableHead className="w-[50px]">
-                                        Is Active
+                                        Status
                                     </TableHead>
                                     {/* <TableHead className="w-[50px]">
                                         Edit
@@ -92,15 +91,22 @@ export default function Dashboard({ users }: Props) {
                                     <TableRow key={user.id}>
                                         <TableCell>{user.name}</TableCell>
                                         <TableCell>{user.email}</TableCell>
-                                        <TableCell className="text-center first-letter:uppercase">
+                                        <TableCell className="first-letter:uppercase">
                                             {user.agency_member?.agency?.name ??
                                                 ''}
                                         </TableCell>
+                                        <TableCell className="first-letter:uppercase">
+                                            {user.agency_member?.role}
+                                        </TableCell>
                                         <TableCell className="text-center">
                                             {user.is_active ? (
-                                                <CheckCircle className="mx-auto h-4 w-4 text-green-500" />
+                                                <Badge variant="default">
+                                                    Active
+                                                </Badge>
                                             ) : (
-                                                <XCircle className="mx-auto h-4 w-4 text-red-500" />
+                                                <Badge variant="destructive">
+                                                    Inactive
+                                                </Badge>
                                             )}
                                         </TableCell>
                                         {/* <TableCell className="text-center">

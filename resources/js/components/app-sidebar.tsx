@@ -52,17 +52,17 @@ const adminNavItems: NavItem[] = [
         href: '/agency/properties',
         icon: LayoutGrid,
     },
+    {
+        title: 'Leads',
+        href: '/agency/leads',
+        icon: LayoutGrid,
+    },
 ];
 
 const agentNavItems: NavItem[] = [
     {
         title: 'Properties',
         href: '/agent/properties',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Clients',
-        href: '/agent/clients',
         icon: LayoutGrid,
     },
     {
