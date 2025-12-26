@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAgenciesController;
 use App\Http\Controllers\Admin\AdminMemberController;
 use App\Http\Controllers\Admin\AdminPropertiesController;
+use App\Http\Controllers\Agent\AgentClientsController;
 use App\Http\Controllers\Agent\AgentPropertiesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Superadmin\AgenciesController as SuperadminAgenciesController;
@@ -95,6 +96,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/property/{property:id}/edit', [AgentPropertiesController::class, 'edit'])->name('agent.properties.edit');
             Route::put('/property/{property:id}/update', [AgentPropertiesController::class, 'update'])->name('agent.properties.update');
             Route::delete('/property/{property:id}/delete', [AgentPropertiesController::class, 'destroy'])->name('agent.properties.delete');
+
+            Route::get('/clients', [AgentClientsController::class, 'index'])->name('agent.clients.index');
+            Route::get('/client/create', [AgentClientsController::class, 'create'])->name('agent.clients.create');
+            Route::post('/client/store', [AgentClientsController::class, 'store'])->name('agent.clients.store');
+            Route::get('/client/{client:id}/edit', [AgentClientsController::class, 'edit'])->name('agent.clients.edit');
+            Route::put('/client/{client:id}/update', [AgentClientsController::class, 'update'])->name('agent.clients.update');
+            Route::delete('/client/{client:id}/delete', [AgentClientsController::class, 'destroy'])->name('agent.clients.delete');
         });
     });
 });
