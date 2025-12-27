@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AgencyMemberModel;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -38,12 +39,20 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $user = $request->user();
+
+        $agencyRole = null;
+        if ($user && !$user->is_superadmin) {
+            $agencyRole = AgencyMemberModel::where('user_id', $user->id)->value('role');
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'role' => $user ? ($user->is_superadmin ? 'superadmin' : $agencyRole) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

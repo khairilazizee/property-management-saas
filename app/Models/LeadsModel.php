@@ -26,7 +26,7 @@ class LeadsModel extends Model
 
     public function agent()
     {
-        return $this->belongsTo(User::class, 'agent_id');
+        return $this->belongsTo(User::class, 'assigned_agent_id');
     }
 
     public function agency()
