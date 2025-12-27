@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAgenciesController;
+use App\Http\Controllers\Admin\AdminLeadsController;
 use App\Http\Controllers\Admin\AdminMemberController;
 use App\Http\Controllers\Admin\AdminPropertiesController;
 use App\Http\Controllers\Agent\AgentClientsController;
@@ -86,6 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/property/{property:id}/edit', [AdminPropertiesController::class, 'edit'])->name('admin.properties.edit');
             Route::put('/property/{property:id}/update', [AdminPropertiesController::class, 'update'])->name('admin.properties.update');
             Route::delete('/property/{property:id}/delete', [AdminPropertiesController::class, 'destroy'])->name('admin.properties.delete');
+
+            Route::get('/leads', [AdminLeadsController::class, 'index'])->name('agent.leads.index');
         });
     });
 

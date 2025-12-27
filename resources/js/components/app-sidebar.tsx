@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -99,6 +99,8 @@ const superAdminSubItems: NavItem[] = [
 // ];
 
 export function AppSidebar() {
+    const { props } = usePage();
+    const role = (props as any).auth?.role;
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -115,13 +117,19 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain title="Platform" items={mainNavItems} />
-                <NavMain
-                    title="Superadmin"
-                    items={superAdminNavItems}
-                    subMenu={superAdminSubItems}
-                />
-                <NavMain title="Admin" items={adminNavItems} />
-                <NavMain title="Agent" items={agentNavItems} />
+                {role === 'superadmin' && (
+                    <NavMain
+                        title="Superadmin"
+                        items={superAdminNavItems}
+                        subMenu={superAdminSubItems}
+                    />
+                )}
+                {role === 'admin' && (
+                    <NavMain title="Admin" items={adminNavItems} />
+                )}
+                {role === 'agent' && (
+                    <NavMain title="Agent" items={agentNavItems} />
+                )}
             </SidebarContent>
 
             <SidebarFooter>

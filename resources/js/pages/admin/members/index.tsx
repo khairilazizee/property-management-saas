@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -22,7 +23,7 @@ import AppLayout from '@/layouts/app-layout';
 import { create, deleteMethod, edit } from '@/routes/admin/members';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { CheckIcon, PencilIcon, PlusIcon, Trash2, XIcon } from 'lucide-react';
+import { PencilIcon, PlusIcon, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -46,6 +47,7 @@ type agencyMemberModel = {
     ren_no: string;
     role: string;
     is_active: boolean;
+    agent_slug: string;
     user: {
         email: string;
     };
@@ -84,6 +86,7 @@ export default function Dashboard({ agents }: Props) {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
+                                    <TableHead>Slug</TableHead>
                                     <TableHead>Ren</TableHead>
                                     <TableHead>Role</TableHead>
                                     <TableHead>Active</TableHead>
@@ -102,15 +105,22 @@ export default function Dashboard({ agents }: Props) {
                                         <TableCell>
                                             {agent.user.email}
                                         </TableCell>
+                                        <TableCell>
+                                            {agent.agent_slug}
+                                        </TableCell>
                                         <TableCell>{agent.ren_no}</TableCell>
                                         <TableCell className="first-letter:uppercase">
                                             {agent.role}
                                         </TableCell>
                                         <TableCell>
                                             {agent.is_active ? (
-                                                <CheckIcon />
+                                                <Badge variant="default">
+                                                    Active
+                                                </Badge>
                                             ) : (
-                                                <XIcon />
+                                                <Badge variant="destructive">
+                                                    Inactive
+                                                </Badge>
                                             )}
                                         </TableCell>
                                         <TableCell>
