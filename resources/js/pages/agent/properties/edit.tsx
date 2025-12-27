@@ -8,7 +8,12 @@ import {
     CardHeader,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupInput } from '@/components/ui/input-group';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+    InputGroupText,
+} from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -42,6 +47,7 @@ type Property = {
     title: string;
     description?: string | null;
     price: number | string;
+    price_type: string | null;
     status?: string | null;
     bedrooms?: number | null;
     bathrooms?: number | null;
@@ -86,9 +92,13 @@ export default function Dashboard({
     const [category, setCategory] = useState<number | null>(
         Number(property.property_category_id),
     );
+    const [adsType, setAdsType] = useState<string | null>(
+        property.advertisement_type ?? null,
+    );
     const { data, setData, put, errors } = useForm({
         property_name: property.title,
         property_price: property.price,
+        property_price_type: property.price_type ?? '',
         property_description: property.description ?? '',
         property_category: property.property_category_id ?? '',
         property_type: property.property_type_id ?? '',
@@ -129,6 +139,46 @@ export default function Dashboard({
                     >
                         <CardContent className="space-y-6">
                             <div className="grid gap-2">
+                                <Label htmlFor="advertisement_type">
+                                    Advertisement Type
+                                </Label>
+                                <Select
+                                    value={data.advertisement_type}
+                                    onValueChange={(value) => {
+                                        setData('advertisement_type', value);
+                                        if (value === 'sale') {
+                                            setData('property_price_type', '');
+                                        }
+                                    }}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select advertisement type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>
+                                                Advertisement Type
+                                            </SelectLabel>
+                                        </SelectGroup>
+                                        <SelectItem value="rent">
+                                            Rent
+                                        </SelectItem>
+                                        <SelectItem value="sale">
+                                            Sale
+                                        </SelectItem>
+                                        <SelectItem value="lease">
+                                            Lease
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+
+                                {errors.advertisement_type && (
+                                    <InputError
+                                        message={errors.advertisement_type}
+                                    />
+                                )}
+                            </div>
+                            <div className="grid gap-2">
                                 <Label htmlFor="property_name">
                                     Property Name
                                 </Label>
@@ -148,13 +198,15 @@ export default function Dashboard({
                                     />
                                 )}
                             </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="property_price">
-                                    Property Price
-                                </Label>
-                                <ButtonGroup className="w-full">
-                                    <ButtonGroupText>MYR</ButtonGroupText>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="grid space-y-2">
+                                    <Label htmlFor="property_price">
+                                        Property Price
+                                    </Label>
                                     <InputGroup>
+                                        <InputGroupAddon>
+                                            <InputGroupText>MYR</InputGroupText>
+                                        </InputGroupAddon>
                                         <InputGroupInput
                                             id="property_price"
                                             name="property_price"
@@ -169,13 +221,49 @@ export default function Dashboard({
                                             }
                                         />
                                     </InputGroup>
-                                </ButtonGroup>
 
-                                {errors.property_price && (
-                                    <InputError
-                                        message={errors.property_price}
-                                    />
-                                )}
+                                    {errors.property_price && (
+                                        <InputError
+                                            message={errors.property_price}
+                                        />
+                                    )}
+                                </div>
+                                <div className="grid space-y-2">
+                                    <Label htmlFor="property_price_type">
+                                        Payment Frequency
+                                    </Label>
+                                    <Select
+                                        value={data.property_price_type}
+                                        defaultValue="month"
+                                        onValueChange={(value) =>
+                                            setData(
+                                                'property_price_type',
+                                                value,
+                                            )
+                                        }
+                                        disabled={adsType === 'sale'}
+                                    >
+                                        <SelectTrigger className="h-10 w-full">
+                                            <SelectValue placeholder="Select payment frequency" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>
+                                                    Property Price Type
+                                                </SelectLabel>
+                                            </SelectGroup>
+                                            <SelectItem value="month">
+                                                Month
+                                            </SelectItem>
+                                            <SelectItem value="quarter">
+                                                Quarterly
+                                            </SelectItem>
+                                            <SelectItem value="Year">
+                                                Yearly
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="property_description">
@@ -296,43 +384,6 @@ export default function Dashboard({
                                         />
                                     )}
                                 </div>
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="advertisement_type">
-                                    Advertisement Type
-                                </Label>
-                                <Select
-                                    value={data.advertisement_type}
-                                    onValueChange={(value) =>
-                                        setData('advertisement_type', value)
-                                    }
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select advertisement type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>
-                                                Advertisement Type
-                                            </SelectLabel>
-                                        </SelectGroup>
-                                        <SelectItem value="rent">
-                                            Rent
-                                        </SelectItem>
-                                        <SelectItem value="sale">
-                                            Sale
-                                        </SelectItem>
-                                        <SelectItem value="lease">
-                                            Lease
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                                {errors.advertisement_type && (
-                                    <InputError
-                                        message={errors.advertisement_type}
-                                    />
-                                )}
                             </div>
                             <div className="grid grid-cols-2 gap-2">
                                 <div>

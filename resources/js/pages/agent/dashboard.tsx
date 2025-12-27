@@ -26,34 +26,26 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const stats = [
-    { label: 'My listings', value: '14', trend: '+2 this month' },
-    { label: 'Active clients', value: '9', trend: '3 new inquiries' },
-    { label: 'Showings this week', value: '6', trend: 'Next 7 days' },
-];
+type Stat = {
+    label: string;
+    value: number;
+    trend: string;
+};
 
-const showings = [
-    {
-        property: 'Lakeside Studio',
-        client: 'A. Tan',
-        time: 'Tue, 10:30 AM',
-        status: 'Confirmed',
-    },
-    {
-        property: 'Cypress Loft',
-        client: 'M. Reyes',
-        time: 'Wed, 3:00 PM',
-        status: 'Pending',
-    },
-    {
-        property: 'Maple Ridge Townhome',
-        client: 'J. Lim',
-        time: 'Fri, 11:00 AM',
-        status: 'Confirmed',
-    },
-];
+type FollowUp = {
+    id: number;
+    property: string;
+    client: string;
+    time: string | null;
+    status: string | null;
+};
 
-export default function Dashboard() {
+type PageProps = {
+    stats: Stat[];
+    followUps: FollowUp[];
+};
+
+export default function Dashboard({ stats, followUps }: PageProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Agent Dashboard" />
@@ -80,7 +72,7 @@ export default function Dashboard() {
                             <CardHeader>
                                 <CardDescription>{stat.label}</CardDescription>
                                 <CardTitle className="text-3xl">
-                                    {stat.value}
+                                    {stat.value.toLocaleString()}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-sm text-muted-foreground">
@@ -92,9 +84,9 @@ export default function Dashboard() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Upcoming showings</CardTitle>
+                        <CardTitle>Upcoming follow-ups</CardTitle>
                         <CardDescription>
-                            Your next confirmed appointments.
+                            Your next scheduled touchpoints.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -108,27 +100,54 @@ export default function Dashboard() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {showings.map((showing) => (
-                                    <TableRow key={showing.property}>
-                                        <TableCell className="font-medium">
-                                            {showing.property}
-                                        </TableCell>
-                                        <TableCell>{showing.client}</TableCell>
-                                        <TableCell>{showing.time}</TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant={
-                                                    showing.status ===
-                                                    'Pending'
-                                                        ? 'secondary'
-                                                        : 'default'
-                                                }
-                                            >
-                                                {showing.status}
-                                            </Badge>
+                                {followUps.length ? (
+                                    followUps.map((followUp) => (
+                                        <TableRow key={followUp.id}>
+                                            <TableCell className="font-medium">
+                                                {followUp.property}
+                                            </TableCell>
+                                            <TableCell>
+                                                {followUp.client}
+                                            </TableCell>
+                                            <TableCell>
+                                                {followUp.time
+                                                    ? new Date(
+                                                          followUp.time,
+                                                      ).toLocaleString(
+                                                          'en-MY',
+                                                          {
+                                                              dateStyle:
+                                                                  'medium',
+                                                              timeStyle:
+                                                                  'short',
+                                                          },
+                                                      )
+                                                    : '—'}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={
+                                                        followUp.status ===
+                                                        'Pending'
+                                                            ? 'secondary'
+                                                            : 'default'
+                                                    }
+                                                >
+                                                    {followUp.status ?? 'New'}
+                                                </Badge>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            className="text-sm text-muted-foreground"
+                                            colSpan={4}
+                                        >
+                                            No upcoming follow-ups.
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

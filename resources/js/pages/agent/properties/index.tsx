@@ -103,6 +103,7 @@ export default function PropertiesIndex({ properties }: Props) {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>Ads Type</TableHead>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Category</TableHead>
                                     <TableHead>Type</TableHead>
@@ -126,6 +127,9 @@ export default function PropertiesIndex({ properties }: Props) {
                                 ) : (
                                     propertyList.map((property) => (
                                         <TableRow key={property.id}>
+                                            <TableCell className="first-letter:uppercase">
+                                                {property.advertisement_type}
+                                            </TableCell>
                                             <TableCell>
                                                 {property.title}
                                             </TableCell>

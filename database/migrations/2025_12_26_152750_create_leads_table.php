@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('agency_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assigned_agent_id')->nullable('users')->constrained()->onDelete('cascade');
+            $table->foreignId('assigned_agent_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('property_id')->nullable()->constrained('properties')->onDelete('cascade');
             $table->string('name');
             $table->string('email')->nullable();

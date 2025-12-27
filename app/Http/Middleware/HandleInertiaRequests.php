@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
         $agencyRole = null;
         if ($user && !$user->is_superadmin) {
             $agencyRole = AgencyMemberModel::where('user_id', $user->id)->value('role');
+            $agentSlug = AgencyMemberModel::where('user_id', $user->id)->value('agent_slug');
         }
 
         return [
@@ -53,6 +54,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'role' => $user ? ($user->is_superadmin ? 'superadmin' : $agencyRole) : null,
+                'agent_slug' => $agencyRole === 'agent' ? $agentSlug : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

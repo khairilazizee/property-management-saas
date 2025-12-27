@@ -10,6 +10,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index } from '@/routes/public/agent/properties';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { LayoutGrid } from 'lucide-react';
@@ -32,6 +33,19 @@ const superAdminNavItems: NavItem[] = [
     {
         title: 'Users',
         href: '/superadmin/users',
+        icon: LayoutGrid,
+    },
+];
+
+const superAdminSubItems: NavItem[] = [
+    {
+        title: 'State',
+        href: '/superadmin/settings/state',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Property Category',
+        href: '/superadmin/settings/property/category',
         icon: LayoutGrid,
     },
 ];
@@ -72,19 +86,6 @@ const agentNavItems: NavItem[] = [
     },
 ];
 
-const superAdminSubItems: NavItem[] = [
-    {
-        title: 'State',
-        href: '/superadmin/settings/state',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Property Category',
-        href: '/superadmin/settings/property/category',
-        icon: LayoutGrid,
-    },
-];
-
 // const footerNavItems: NavItem[] = [
 //     {
 //         title: 'Repository',
@@ -101,6 +102,16 @@ const superAdminSubItems: NavItem[] = [
 export function AppSidebar() {
     const { props } = usePage();
     const role = (props as any).auth?.role;
+    const $agent_slug = (props as any).auth?.agent_slug;
+
+    const agentSubItems: NavItem[] = [
+        {
+            title: 'Public Properties',
+            href: index.url({ agent: $agent_slug }),
+            icon: LayoutGrid,
+        },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -128,7 +139,11 @@ export function AppSidebar() {
                     <NavMain title="Admin" items={adminNavItems} />
                 )}
                 {role === 'agent' && (
-                    <NavMain title="Agent" items={agentNavItems} />
+                    <NavMain
+                        title="Agent"
+                        items={agentNavItems}
+                        subMenu={agentSubItems}
+                    />
                 )}
             </SidebarContent>
 

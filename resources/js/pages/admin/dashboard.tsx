@@ -26,41 +26,41 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const stats = [
-    { label: 'Active listings', value: '124', trend: '+8 this week' },
-    { label: 'Active agents', value: '18', trend: '4 currently on duty' },
-    { label: 'New leads', value: '36', trend: '+12 since yesterday' },
-    { label: 'Showings booked', value: '29', trend: 'Next 7 days' },
-];
+type Stat = {
+    label: string;
+    value: number;
+    trend: string;
+};
 
-const listings = [
-    {
-        name: 'Maple Ridge Townhome',
-        status: 'Live',
-        price: '$428,000',
-        views: '1,240',
-    },
-    {
-        name: 'Lakeside Studio',
-        status: 'Pending',
-        price: '$210,000',
-        views: '760',
-    },
-    {
-        name: 'Willow Park Estate',
-        status: 'Live',
-        price: '$1.2M',
-        views: '2,980',
-    },
-    {
-        name: 'Cypress Loft',
-        status: 'Draft',
-        price: '$540,000',
-        views: '310',
-    },
-];
+type Listing = {
+    id: number;
+    name: string;
+    status: string | null;
+    price: number | null;
+    priceType: string | null;
+    agent: string | null;
+};
 
-export default function Dashboard() {
+type PageProps = {
+    stats: Stat[];
+    listings: Listing[];
+};
+
+const formatPrice = (price: number | null, priceType: string | null) => {
+    if (price === null) {
+        return '—';
+    }
+
+    const formatted = new Intl.NumberFormat('en-MY', {
+        style: 'currency',
+        currency: 'MYR',
+        maximumFractionDigits: 0,
+    }).format(price);
+
+    return priceType ? `${formatted} / ${priceType}` : formatted;
+};
+
+export default function Dashboard({ stats, listings }: PageProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Agency Dashboard" />
@@ -87,7 +87,7 @@ export default function Dashboard() {
                             <CardHeader>
                                 <CardDescription>{stat.label}</CardDescription>
                                 <CardTitle className="text-3xl">
-                                    {stat.value}
+                                    {stat.value.toLocaleString()}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-sm text-muted-foreground">
@@ -99,9 +99,9 @@ export default function Dashboard() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Listing pulse</CardTitle>
+                        <CardTitle>Latest listings</CardTitle>
                         <CardDescription>
-                            Top listings by engagement.
+                            Recent properties added to the agency.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -111,33 +111,52 @@ export default function Dashboard() {
                                     <TableHead>Property</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Price</TableHead>
-                                    <TableHead>Views</TableHead>
+                                    <TableHead>Agent</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {listings.map((listing) => (
-                                    <TableRow key={listing.name}>
-                                        <TableCell className="font-medium">
-                                            {listing.name}
+                                {listings.length ? (
+                                    listings.map((listing) => (
+                                        <TableRow key={listing.id}>
+                                            <TableCell className="font-medium">
+                                                {listing.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={
+                                                        listing.status ===
+                                                        'Draft'
+                                                            ? 'secondary'
+                                                            : listing.status ===
+                                                                'Pending'
+                                                              ? 'outline'
+                                                              : 'default'
+                                                    }
+                                                >
+                                                    {listing.status ?? 'Active'}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                {formatPrice(
+                                                    listing.price,
+                                                    listing.priceType,
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {listing.agent ?? '—'}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            className="text-sm text-muted-foreground"
+                                            colSpan={4}
+                                        >
+                                            No listings yet.
                                         </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant={
-                                                    listing.status === 'Draft'
-                                                        ? 'secondary'
-                                                        : listing.status ===
-                                                            'Pending'
-                                                          ? 'outline'
-                                                          : 'default'
-                                                }
-                                            >
-                                                {listing.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>{listing.price}</TableCell>
-                                        <TableCell>{listing.views}</TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Agent\AgentClientsController;
 use App\Http\Controllers\Agent\AgentLeadsController;
 use App\Http\Controllers\Agent\AgentPropertiesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Public\PublicAgentPropertiesController;
 use App\Http\Controllers\Superadmin\AgenciesController as SuperadminAgenciesController;
 use App\Http\Controllers\Superadmin\Settings\PropertyCategoryController;
 use App\Http\Controllers\Superadmin\Settings\DistrictController as SuperadminDistrictController;
@@ -23,6 +24,9 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+Route::get('/properties/{agent:agent_slug}', [PublicAgentPropertiesController::class, 'index'])->name('public.agent.properties.index');
+Route::get('/properties/{agent:agent_slug}/{properties:property_slug}', [PublicAgentPropertiesController::class, 'index'])->name('public.agent.properties.view');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -88,7 +92,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/property/{property:id}/update', [AdminPropertiesController::class, 'update'])->name('admin.properties.update');
             Route::delete('/property/{property:id}/delete', [AdminPropertiesController::class, 'destroy'])->name('admin.properties.delete');
 
-            Route::get('/leads', [AdminLeadsController::class, 'index'])->name('agent.leads.index');
+            Route::get('/leads', [AdminLeadsController::class, 'index'])->name('admin.leads.index');
         });
     });
 

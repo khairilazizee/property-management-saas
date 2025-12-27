@@ -51,6 +51,7 @@ class AgentPropertiesController extends Controller
         $data = $request->validate([
             'property_name' => 'required|string|max:255',
             'property_price' => 'required|numeric|min:0',
+            'property_price_type' => 'nullable|string|max:255',
             'property_description' => 'nullable|string',
             'property_category' => 'required|integer|exists:property_category,id',
             'property_type' => 'required|integer|exists:property_type,id',
@@ -77,6 +78,7 @@ class AgentPropertiesController extends Controller
             'agent_id' => $request->user()->id,
             'title' => $data['property_name'],
             'price' => (int) $data['property_price'],
+            'price_type' => $data['property_price_type'] ?? '',
             'description' => $data['property_description'] ?? null,
             'property_category_id' => $data['property_category'],
             'property_type_id' => $data['property_type'],
@@ -131,6 +133,7 @@ class AgentPropertiesController extends Controller
         $data = $request->validate([
             'property_name' => 'required|string|max:255',
             'property_price' => 'required|numeric|min:0',
+            'property_price_type' => 'nullable|string|max:255',
             'property_description' => 'nullable|string',
             'property_category' => 'required|integer|exists:property_category,id',
             'property_type' => 'required|integer|exists:property_type,id',
@@ -153,6 +156,7 @@ class AgentPropertiesController extends Controller
             'agent_id' => $request->user()->id,
             'title' => $data['property_name'],
             'price' => (int) $data['property_price'],
+            'price_type' => $data['property_price_type'] ?? '',
             'description' => $data['property_description'] ?? null,
             'property_category_id' => $data['property_category'],
             'property_type_id' => $data['property_type'],
